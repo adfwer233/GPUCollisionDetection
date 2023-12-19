@@ -10,5 +10,7 @@ include(fetch-glm)
 
 add_executable(demo src/main.cpp)
 
+add_subdirectory(src/collision_detection)
+
 target_include_directories(demo PUBLIC include)
 target_link_libraries(demo glfw glad)
