@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.26)
 
 project(GPUCollisionDetection)
 
-set(ENV{http_proxy} "http://127.0.0.1:10809")
-set(ENV{https_proxy} "http://127.0.0.1:10809")
-
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 include(fetch-glfw)
