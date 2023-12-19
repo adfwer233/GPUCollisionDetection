@@ -4,4 +4,6 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(SRC_FILE main.cu)
 
-add_executable(${PROJECT_NAME} ${SRC_FILE})
+add_library(${PROJECT_NAME} ${SRC_FILE})
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)
