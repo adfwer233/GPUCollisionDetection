@@ -2,7 +2,8 @@ project(collision_detection VERSION 1.0 DESCRIPTION "project for learning cuda" 
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(SRC_FILE main.cu)
+set(SRC_FILE main.cu
+        gpu_scan.cu)
 
 add_library(${PROJECT_NAME} ${SRC_FILE})
 

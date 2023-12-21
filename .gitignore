@@ -2,3 +2,6 @@
 
 build/
 cmake-build-debug-visual-studio/
+cmake-build-debug/
+cmake-build-release-visual-studio/
+cmake-build-debug-mingw_clang/

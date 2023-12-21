@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "collision_detection/gpu_sort.h"
+#include "collision_detection/gpu_sort.cuh"
 
 TEST(HelloTest, BasicAssertions) {
     // Expect two strings not to be equal.

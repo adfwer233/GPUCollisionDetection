@@ -1,0 +1,1 @@
+void gpu_scan(int *input, int *output, int n);
