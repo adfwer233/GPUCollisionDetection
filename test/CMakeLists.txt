@@ -9,4 +9,6 @@ add_executable(test collision_detection/sort_test.cu
 
 target_link_libraries(test GTest::gtest_main)
 
+include(GoogleTest)
+
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)
