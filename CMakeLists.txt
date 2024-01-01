@@ -15,6 +15,9 @@ include(fetch-glad)
 include(fetch-glm)
 include(fetch-gtest)
 
+include(CPM)
+include(fetch-cccl)
+
 add_executable(demo src/main.cpp)
 
 add_subdirectory(src/collision_detection)
