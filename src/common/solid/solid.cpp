@@ -41,7 +41,7 @@ Mesh Ball::construct_mesh() {
             float y = std::sin(theta) * std::sin(phi);
             float z = std::cos(theta);
 
-            model.vertices.push_back({{x, y, z}, {x, y, z}, {1.0f * i / theta_segments, 1.0f * j / phi_segments }});
+            model.vertices.push_back({{x * radius, y * radius, z * radius}, {x, y, z}, {1.0f * i / theta_segments, 1.0f * j / phi_segments }});
         }
     }
 
@@ -58,8 +58,8 @@ Mesh Ball::construct_mesh() {
 
     model.transform = glm::identity<glm::mat4>();
 
+//    model.transform = glm::scale(model.transform, glm::vec3(radius, radius, radius));
     model.transform = glm::translate(model.transform, glm::vec3(center.x, center.y, center.z));
-    model.transform = glm::scale(model.transform, glm::vec3(radius, radius, radius));
 
     model.box = AxisAlignedBoundingBox({-1, 1, -1, 1, -1, 1});
     return model;

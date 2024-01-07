@@ -1,13 +1,16 @@
+#include <format>
 #include "common/solid/solid.hpp"
 #include "common/simulation/simulation.hpp"
 
-void Simulator::update_state_when_collide(Solid &solid1, Solid &solid2) const {
-    solid1.velocity *= -1.0f;
-    solid2.velocity *= -1.0f;
-
+bool Simulator::update_state_when_collide(Solid &solid1, Solid &solid2) const {
     if (solid1.is_collision_with(solid2)) {
-        // ?
+        std::cout << std::format("{} {} {}\n", solid2.center.x, solid2.center.y, solid2.center.z) ;
+        std::cout << "collision" << std::endl;
+        solid1.velocity *= -1.0f;
+        solid2.velocity *= -1.0f;
+        return true;
     }
+    return false;
 }
 
 glm::vec3 Simulator::update_state_with_field(Solid &solid, const VectorField &field) const {

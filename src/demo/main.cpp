@@ -136,7 +136,13 @@ int main()
     ball2_mesh.object_color = {0, 1, 0};
     ball_mesh.object_color = {1, 0, 0};
 
-    XSymmetricField field;
+    GravityField field;
+
+    Ground ground({0, -5, 0});
+    Mesh ground_mesh = ground.construct_mesh();
+    ground_mesh.bind_buffer();
+
+    ground_mesh.object_color = {0.5, 0.5, 0};
 
     // render loop
     // -----------
@@ -150,6 +156,16 @@ int main()
         auto displacement_ball = simulator.update_state_with_field(ball, field);
         ball_mesh.transform = glm::translate(ball_mesh.transform, displacement_ball);
 
+        auto displacement_ball2 = simulator.update_state_with_field(ball2, field);
+        ball2_mesh.transform = glm::translate(ball2_mesh.transform, displacement_ball2);
+
+        bool res1 = simulator.update_state_when_collide(ground, ball);
+        bool res2 = simulator.update_state_when_collide(ground, ball2);
+
+//        if (res1) {
+//            std::cout << ball;
+//        }
+
         processInput(window);
 
         // render
@@ -159,6 +175,8 @@ int main()
 
         ball2_mesh.process_rendering(shader, camera, lightPos);
         ball_mesh.process_rendering(shader, camera, lightPos);
+
+        ground_mesh.process_rendering(shader, camera, lightPos);
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);

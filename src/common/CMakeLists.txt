@@ -7,7 +7,8 @@ set(SRC_FILE solid/solid.cpp
         simulation/field.cpp
         mesh/mesh.cpp
         shader/shader.cpp
-        camera/camera.cpp)
+        camera/camera.cpp
+        solid/ground.cpp)
 
 add_library(${PROJECT_NAME} ${SRC_FILE})
 
