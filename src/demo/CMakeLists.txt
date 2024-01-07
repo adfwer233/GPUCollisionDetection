@@ -10,7 +10,7 @@ add_executable(${PROJECT_NAME} ${SRC_FILE})
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
-target_link_libraries(${PROJECT_NAME} glm glfw glad common)
+target_link_libraries(${PROJECT_NAME} glm glfw glad common collision_detection)
 
 add_custom_command(
         TARGET ${PROJECT_NAME} POST_BUILD

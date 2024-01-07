@@ -28,7 +28,13 @@ Mesh Ground::construct_mesh() {
 bool Ground::is_collision_with(Solid &solid) {
     if (typeid(solid) == typeid(Ball)) {
         Ball &ball = dynamic_cast<Ball &>(solid);
-        return (ball.center.y - ball.radius - this->center.y) * (ball.center.y + ball.radius - this->center.y) < 0;
+        bool res = (ball.center.y - ball.radius - this->center.y) * (ball.center.y + ball.radius - this->center.y) < 0;
+
+        if (res) {
+            ball.center.y = this->center.y + ball.radius + 1e-8;
+        }
+
+        return res;
     } else {
         assert(false);
     }

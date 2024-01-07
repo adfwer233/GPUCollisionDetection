@@ -4,9 +4,13 @@
 
 #include "iostream"
 
+#include "random"
+
 #include "common/simulation/simulation.hpp"
 #include "common/simulation/field.hpp"
 #include "common/solid/solid.hpp"
+
+#include "collision_detection/cpu/cpu_collision_detection.hpp"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -19,7 +23,7 @@ const unsigned int SCR_HEIGHT = 1024;
 #define SHADER_DIR "./shader"
 #endif
 
-Camera camera(glm::vec3(0, 0, 5.0f), glm::vec3(0, 1.0f, 0));
+Camera camera(glm::vec3(0, 0, 10.0f), glm::vec3(0, 1.0f, 0));
 glm::vec3 lightPos(0, 0, 10);
 
 float deltaTime = 0.0f;
@@ -124,17 +128,29 @@ int main()
 
     Shader shader(std::format("{}/common.vs", SHADER_DIR), std::format("{}/common.fs", SHADER_DIR));
 
+    std::vector<std::reference_wrapper<Solid>> solid_vector;
+    std::vector<Mesh> mesh_vector;
 
     Ball ball({-1, 0 ,0}, 1, {0, 0, 0}, 0.2);
     Ball ball2({-1, 0 ,1}, 1, {0, 0, 0}, 0.2);
+    Ball ball3({-1, 0.5 ,0}, 1, {0, 1, 0}, 0.2);
+    Ball ball4({-1, 0.5 ,1}, 1, {0, 1, 0}, 0.2);
 
-    Mesh ball_mesh = ball.construct_mesh();
-    Mesh ball2_mesh = ball2.construct_mesh();
-    ball2_mesh.bind_buffer();
-    ball_mesh.bind_buffer();
+    solid_vector.push_back(ball);
+    solid_vector.push_back(ball2);
+    solid_vector.push_back(ball3);
+    solid_vector.push_back(ball4);
 
-    ball2_mesh.object_color = {0, 1, 0};
-    ball_mesh.object_color = {1, 0, 0};
+    std::random_device seed;
+    std::ranlux48 engine(seed());
+    std::uniform_real_distribution distrib(0.0f, 1.0f);
+
+    for (auto solid: solid_vector) {
+        mesh_vector.push_back(solid.get().construct_mesh());
+        Mesh &mesh = mesh_vector.back();
+        mesh.bind_buffer();
+        mesh.object_color = {distrib(engine), distrib(engine), distrib(engine)};
+    }
 
     GravityField field;
 
@@ -153,18 +169,22 @@ int main()
         lastFrame = currentFrame;
 
         Simulator simulator(deltaTime);
-        auto displacement_ball = simulator.update_state_with_field(ball, field);
-        ball_mesh.transform = glm::translate(ball_mesh.transform, displacement_ball);
 
-        auto displacement_ball2 = simulator.update_state_with_field(ball2, field);
-        ball2_mesh.transform = glm::translate(ball2_mesh.transform, displacement_ball2);
+        for (size_t i = 0; i < solid_vector.size(); i++) {
+            auto displacement = simulator.update_state_with_field(solid_vector[i], field);
+            Mesh &mesh = mesh_vector[i];
+            mesh.transform = glm::translate(mesh.transform, displacement);
+        }
 
-        bool res1 = simulator.update_state_when_collide(ground, ball);
-        bool res2 = simulator.update_state_when_collide(ground, ball2);
+        // collision_detection between solids
 
-//        if (res1) {
-//            std::cout << ball;
-//        }
+        CPUNaiveCollisionDetection::collision_detection(solid_vector);
+
+        // collision detection between solid and ground
+
+        for (auto &i : solid_vector) {
+            bool res = simulator.update_state_when_collide(ground, i);
+        }
 
         processInput(window);
 
@@ -173,8 +193,9 @@ int main()
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        ball2_mesh.process_rendering(shader, camera, lightPos);
-        ball_mesh.process_rendering(shader, camera, lightPos);
+        for (auto &mesh: mesh_vector) {
+            mesh.process_rendering(shader, camera, lightPos);
+        }
 
         ground_mesh.process_rendering(shader, camera, lightPos);
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
