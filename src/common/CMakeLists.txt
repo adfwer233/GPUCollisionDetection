@@ -2,7 +2,9 @@ project(common VERSION 1.0 DESCRIPTION "common library for collision detection" 
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(SRC_FILE solid/solid.cpp)
+set(SRC_FILE solid/solid.cpp
+        simulation/simulation.cpp
+        simulation/field.cpp)
 
 add_library(${PROJECT_NAME} ${SRC_FILE})
 
