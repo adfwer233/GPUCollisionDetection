@@ -11,3 +11,8 @@ class GravityField : VectorField {
 public:
     [[nodiscard]] glm::vec3 eval(glm::vec3 position) const override;
 };
+
+class XSymmetricField: VectorField {
+public:
+    [[nodiscard]] glm::vec3 eval(glm::vec3 position) const override;
+};

@@ -2,8 +2,9 @@
 
 #include "glm/glm.hpp"
 
-#include "common/solid/solid.hpp"
 #include "field.hpp"
+
+class Solid;
 
 class Simulation {
 private:

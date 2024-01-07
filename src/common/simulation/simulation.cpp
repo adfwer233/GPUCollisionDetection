@@ -1,3 +1,4 @@
+#include "common/solid/solid.hpp"
 #include "common/simulation/simulation.hpp"
 
 void Simulation::update_state_when_collide(Solid &solid1, Solid &solid2) const {

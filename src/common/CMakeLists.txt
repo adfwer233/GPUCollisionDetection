@@ -4,10 +4,13 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(SRC_FILE solid/solid.cpp
         simulation/simulation.cpp
-        simulation/field.cpp)
+        simulation/field.cpp
+        mesh/mesh.cpp
+        shader/shader.cpp
+        camera/camera.cpp)
 
 add_library(${PROJECT_NAME} ${SRC_FILE})
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
-target_link_libraries(${PROJECT_NAME} glm)
+target_link_libraries(${PROJECT_NAME} glm glfw glad)
