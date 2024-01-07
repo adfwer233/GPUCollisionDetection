@@ -21,6 +21,7 @@ include(fetch-cccl)
 add_executable(demo src/main.cpp)
 
 add_subdirectory(src/collision_detection)
+add_subdirectory(src/common)
 add_subdirectory(test)
 
 target_link_libraries(demo glfw glad glm gtest)
