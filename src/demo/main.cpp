@@ -4,6 +4,8 @@
 
 #include "iostream"
 
+#include "common/simulation/simulation.hpp"
+#include "common/simulation/field.hpp"
 #include "common/solid/solid.hpp"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -134,6 +136,8 @@ int main()
     ball2_mesh.object_color = {0, 1, 0};
     ball_mesh.object_color = {1, 0, 0};
 
+    XSymmetricField field;
+
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -141,6 +145,10 @@ int main()
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+
+        Simulator simulator(deltaTime);
+        auto displacement_ball = simulator.update_state_with_field(ball, field);
+        ball_mesh.transform = glm::translate(ball_mesh.transform, displacement_ball);
 
         processInput(window);
 

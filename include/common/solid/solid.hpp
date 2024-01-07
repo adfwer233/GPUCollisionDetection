@@ -17,7 +17,7 @@ public:
     virtual Mesh construct_mesh() = 0;
     virtual AxisAlignedBoundingBox getBoundingBox() = 0;
     virtual bool is_collision_with(Solid &solid) = 0;
-    friend class Simulation;
+    friend class Simulator;
 };
 
 class Ball: public Solid {

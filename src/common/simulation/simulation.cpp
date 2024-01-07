@@ -1,7 +1,7 @@
 #include "common/solid/solid.hpp"
 #include "common/simulation/simulation.hpp"
 
-void Simulation::update_state_when_collide(Solid &solid1, Solid &solid2) const {
+void Simulator::update_state_when_collide(Solid &solid1, Solid &solid2) const {
     solid1.velocity *= -1.0f;
     solid2.velocity *= -1.0f;
 
@@ -10,7 +10,7 @@ void Simulation::update_state_when_collide(Solid &solid1, Solid &solid2) const {
     }
 }
 
-void Simulation::update_state_with_field(Solid &solid, const VectorField &field) const {
+glm::vec3 Simulator::update_state_with_field(Solid &solid, const VectorField &field) const {
     auto acceleration = field.eval(solid.center);
 
     auto next_velocity = solid.velocity + acceleration * time_per_frame;
@@ -18,4 +18,6 @@ void Simulation::update_state_with_field(Solid &solid, const VectorField &field)
 
     solid.center = solid.center + average_velocity * time_per_frame;
     solid.velocity = next_velocity;
+
+    return average_velocity * time_per_frame;
 }
