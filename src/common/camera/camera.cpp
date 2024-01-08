@@ -2,6 +2,10 @@
 
 #include "iostream"
 
+/**
+ * @brief get view transformation from camera
+ * @return test
+ */
 glm::mat4 Camera::get_view_transformation() const {
     return glm::lookAt(position, position + camera_front, camera_up_axis);
 }

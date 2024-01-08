@@ -2,6 +2,14 @@
 
 #include "collision_detection/cpu/cpu_collision_detection.hpp"
 
+/**
+ * @brief CPU Version of sweep and prune algorithm
+ *
+ * @note if two ball collide, we will compute the time of collision and compute the final position of the ball
+ *
+ * @param solid_ref_vector vector of solids to perform collision detection
+ * @param time_step time step of current simulation procedure
+ */
 void CPUSweepAndPruneCollisionDetection::collision_detection(std::vector<std::reference_wrapper<Solid>> &solid_ref_vector, float time_step) {
     /*
      * Step1: construct solid info

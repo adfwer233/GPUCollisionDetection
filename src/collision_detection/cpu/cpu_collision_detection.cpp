@@ -2,6 +2,9 @@
 
 #include "glm/glm.hpp"
 
+/**
+ * @param solid_ref_vector vector of solid references to perform collision detection.
+ */
 void CPUNaiveCollisionDetection::collision_detection(std::vector<std::reference_wrapper<Solid>> &solid_ref_vector) {
     size_t n = solid_ref_vector.size();
 

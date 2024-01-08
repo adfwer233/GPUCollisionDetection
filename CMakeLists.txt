@@ -26,3 +26,7 @@ add_subdirectory(test)
 target_link_libraries(demo glfw glad glm gtest)
 
 target_link_libraries(test collision_detection)
+
+message(STATUS "Build documentation open")
+include(build-doxygen)
+build_doxygen()
