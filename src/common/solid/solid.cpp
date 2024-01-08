@@ -28,8 +28,8 @@ Mesh Ball::construct_mesh() {
 
     Mesh model;
 
-    constexpr int theta_segments = 50;
-    constexpr int phi_segments = 50;
+    constexpr int theta_segments = 20;
+    constexpr int phi_segments = 20;
 
     // Generate Vertices
     for (int i: std::views::iota(0, theta_segments + 1)) {

@@ -136,10 +136,23 @@ int main()
     Ball ball3({-1, 0.5 ,0}, 1, {0, 1, 0}, 0.2);
     Ball ball4({-1, 0.5 ,1}, 1, {0, 1, 0}, 0.2);
 
-    solid_vector.push_back(ball);
-    solid_vector.push_back(ball2);
-    solid_vector.push_back(ball3);
-    solid_vector.push_back(ball4);
+    std::vector<Ball> balls;
+
+    int x_num = 5;
+    int z_num = 5;
+
+    for (int i = 0; i < x_num; i++) {
+        for (int j = 0; j < z_num; j++) {
+            float delta_x = 20.0 / x_num * i;
+            float delta_z = 20.0 / z_num * j;
+            balls.emplace_back(glm::vec3{-10 + delta_x, 0 ,-10 + delta_z}, 1, glm::vec3 {0, 0, 0}, 0.2);
+            balls.emplace_back(glm::vec3{-10 + delta_x, 0.5 ,-10 + delta_z}, 1, glm::vec3 {0, 1, 0}, 0.2);
+        }
+    }
+
+    for (auto &ball: balls)
+        solid_vector.push_back(ball);
+
 
     std::random_device seed;
     std::ranlux48 engine(seed());
@@ -168,6 +181,8 @@ int main()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
+        std::cout << deltaTime << std::endl;
+
         Simulator simulator(deltaTime);
 
         for (size_t i = 0; i < solid_vector.size(); i++) {
@@ -178,7 +193,7 @@ int main()
 
         // collision_detection between solids
 
-        // CPUNaiveCollisionDetection::collision_detection(solid_vector);
+//         CPUNaiveCollisionDetection::collision_detection(solid_vector);
 
         CPUSweepAndPruneCollisionDetection::collision_detection(solid_vector);
 
