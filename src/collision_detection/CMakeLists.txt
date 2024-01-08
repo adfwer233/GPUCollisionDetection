@@ -4,7 +4,8 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(SRC_FILE main.cu
         gpu_scan.cu
-        cpu/cpu_collision_detection.cpp)
+        cpu/cpu_collision_detection.cpp
+        cpu/cpu_sweep_and_prune_collision_detection.cpp)
 
 add_library(${PROJECT_NAME} ${SRC_FILE})
 

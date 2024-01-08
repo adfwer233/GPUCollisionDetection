@@ -178,7 +178,9 @@ int main()
 
         // collision_detection between solids
 
-        CPUNaiveCollisionDetection::collision_detection(solid_vector);
+        // CPUNaiveCollisionDetection::collision_detection(solid_vector);
+
+        CPUSweepAndPruneCollisionDetection::collision_detection(solid_vector);
 
         // collision detection between solid and ground
 

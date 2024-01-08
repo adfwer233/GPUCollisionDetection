@@ -6,6 +6,15 @@
 
 class CPUNaiveCollisionDetection {
 public:
+    static void collision_detection (std::vector<std::reference_wrapper<Solid>> &solid_ref_vector);
+};
 
+class CPUSweepAndPruneCollisionDetection {
+private:
+    struct SolidInfo {
+        size_t id;
+        AxisAlignedBoundingBox box;
+    };
+public:
     static void collision_detection (std::vector<std::reference_wrapper<Solid>> &solid_ref_vector);
 };
