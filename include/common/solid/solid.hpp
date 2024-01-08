@@ -13,6 +13,8 @@ public:
     glm::vec3 velocity;
     std::optional<AxisAlignedBoundingBox> box;
 
+    std::optional<std::reference_wrapper<Mesh>> mesh_ref { std::nullopt };
+
     virtual Mesh construct_mesh() = 0;
     virtual AxisAlignedBoundingBox getBoundingBox() = 0;
     virtual bool is_collision_with(Solid &solid) = 0;

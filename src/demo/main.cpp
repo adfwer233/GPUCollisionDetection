@@ -129,7 +129,6 @@ int main()
     Shader shader(std::format("{}/common.vs", SHADER_DIR), std::format("{}/common.fs", SHADER_DIR));
 
     std::vector<std::reference_wrapper<Solid>> solid_vector;
-    std::vector<Mesh> mesh_vector;
 
     Ball ball({-1, 0 ,0}, 1, {0, 0, 0}, 0.2);
     Ball ball2({-1, 0 ,1}, 1, {0, 0, 0}, 0.2);
@@ -138,8 +137,8 @@ int main()
 
     std::vector<Ball> balls;
 
-    int x_num = 5;
-    int z_num = 5;
+    int x_num = 49;
+    int z_num = 49;
 
     for (int i = 0; i < x_num; i++) {
         for (int j = 0; j < z_num; j++) {
@@ -158,11 +157,15 @@ int main()
     std::ranlux48 engine(seed());
     std::uniform_real_distribution distrib(0.0f, 1.0f);
 
+    std::vector<Mesh> mesh_vector;
+    mesh_vector.reserve(solid_vector.size());
+
     for (auto solid: solid_vector) {
         mesh_vector.push_back(solid.get().construct_mesh());
         Mesh &mesh = mesh_vector.back();
         mesh.bind_buffer();
         mesh.object_color = {distrib(engine), distrib(engine), distrib(engine)};
+        solid.get().mesh_ref = mesh_vector[mesh_vector.size() - 1];
     }
 
     GravityField field;
@@ -195,7 +198,7 @@ int main()
 
 //         CPUNaiveCollisionDetection::collision_detection(solid_vector);
 
-        CPUSweepAndPruneCollisionDetection::collision_detection(solid_vector);
+        CPUSweepAndPruneCollisionDetection::collision_detection(solid_vector, deltaTime);
 
         // collision detection between solid and ground
 
