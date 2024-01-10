@@ -30,3 +30,5 @@ target_link_libraries(test collision_detection)
 message(STATUS "Build documentation open")
 include(build-doxygen)
 build_doxygen()
+
+include(clang-format)
