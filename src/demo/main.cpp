@@ -184,7 +184,7 @@ int main()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        std::cout << deltaTime << std::endl;
+//        std::cout << deltaTime << std::endl;
 
         Simulator simulator(deltaTime);
 

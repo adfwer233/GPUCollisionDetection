@@ -93,6 +93,8 @@ void CPUSweepAndPruneCollisionDetection::collision_detection(std::vector<std::re
 
                     solid_i.center += collision_displacement_i;
                     solid_j.center += collision_displacement_j;
+                } else {
+                    assert(false);
                 }
                 std::swap(solid_i.velocity, solid_j.velocity);
             }
