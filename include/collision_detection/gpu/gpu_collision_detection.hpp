@@ -5,7 +5,7 @@
 
 struct SolidInfoGPU {
   size_t id;
-  AxisAlignedBoundingBox box;
+  float min_x, max_x, min_y, max_y, min_z, max_z;
 };
 
 /*

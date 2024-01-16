@@ -1,4 +1,4 @@
-project(demo VERSION 1.0 DESCRIPTION "Collision detection demo" LANGUAGES CXX)
+project(demo VERSION 1.0 DESCRIPTION "Collision detection demo" LANGUAGES CXX CUDA)
 
 set(CMAKE_CXX_STANDARD 20)
 

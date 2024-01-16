@@ -1,13 +1,16 @@
 #include <format>
 
-#include "GLFW/glfw3.h"
 #include "collision_detection/cpu/cpu_collision_detection.hpp"
+#include "collision_detection/gpu/gpu_collision_detection.hpp"
+
 #include "common/simulation/field.hpp"
 #include "common/simulation/simulation.hpp"
 #include "common/solid/solid.hpp"
-#include "glad/glad.h"
 #include "iostream"
 #include "random"
+
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -132,17 +135,17 @@ int main() {
 
   std::vector<Ball> balls;
 
-  int x_num = 49;
-  int z_num = 49;
+  int x_num = 100;
+  int z_num = 100;
 
   for (int i = 0; i < x_num; i++) {
     for (int j = 0; j < z_num; j++) {
       float delta_x = 20.0 / x_num * i;
       float delta_z = 20.0 / z_num * j;
       balls.emplace_back(glm::vec3{-10 + delta_x, 0, -10 + delta_z}, 1,
-                         glm::vec3{0, 0, 0}, 0.2);
+                         glm::vec3{0, 0, 0}, 0.02);
       balls.emplace_back(glm::vec3{-10 + delta_x, 0.5, -10 + delta_z}, 1,
-                         glm::vec3{0, 1, 0}, 0.2);
+                         glm::vec3{0, 2, 0}, 0.02);
     }
   }
 
@@ -178,9 +181,9 @@ int main() {
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
 
-    //        std::cout << deltaTime << std::endl;
+    std::cout << deltaTime << std::endl;
 
-    Simulator simulator(deltaTime);
+    Simulator simulator(0.005);
 
     for (size_t i = 0; i < solid_vector.size(); i++) {
       auto displacement =
@@ -193,8 +196,9 @@ int main() {
 
     //         CPUNaiveCollisionDetection::collision_detection(solid_vector);
 
-    CPUSweepAndPruneCollisionDetection::collision_detection(solid_vector,
-                                                            deltaTime);
+//    CPUSweepAndPruneCollisionDetection::collision_detection(solid_vector,0.005);
+
+    GPUSweepAndPruneCollisionDetection::collision_detection(solid_vector, 0.005);
 
     // collision detection between solid and ground
 
