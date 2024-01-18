@@ -1,5 +1,5 @@
-#include <format>
 #include "common/solid/solid.hpp"
+#include <format>
 
 EnvironmentBox::EnvironmentBox(glm::vec3 center) {
     this->center = center;
@@ -51,7 +51,8 @@ bool EnvironmentBox::is_collision_with(Solid &solid) {
             res = true;
             solid.center.y = this->center.y - this->box_size + ball.radius + 1e-6;
             solid.velocity.y *= -0.5f;
-            // std::cout << std::format("bottom {} {} {} {}", solid.velocity.x, solid.velocity.y, solid.velocity.z, ball.center.y) << std::endl;
+            // std::cout << std::format("bottom {} {} {} {}", solid.velocity.x, solid.velocity.y, solid.velocity.z,
+            // ball.center.y) << std::endl;
         }
 
         // y-axis, upper side

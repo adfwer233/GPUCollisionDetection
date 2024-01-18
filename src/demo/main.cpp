@@ -146,8 +146,10 @@ int main() {
         for (int j = 0; j < z_num; j++) {
             float delta_x = 20.0 / x_num * i;
             float delta_z = 20.0 / z_num * j;
-            balls.emplace_back(glm::vec3{-10 + delta_x, 0, -10 + delta_z}, 1, glm::vec3{distrib(engine), distrib(engine), distrib(engine)}, 0.01);
-            balls.emplace_back(glm::vec3{-10 + delta_x, 0.5, -10 + delta_z}, 1, glm::vec3{distrib(engine), distrib(engine), distrib(engine)}, 0.01);
+            balls.emplace_back(glm::vec3{-10 + delta_x, 0, -10 + delta_z}, 1,
+                               glm::vec3{distrib(engine), distrib(engine), distrib(engine)}, 0.01);
+            balls.emplace_back(glm::vec3{-10 + delta_x, 0.5, -10 + delta_z}, 1,
+                               glm::vec3{distrib(engine), distrib(engine), distrib(engine)}, 0.01);
         }
     }
 
@@ -216,7 +218,6 @@ int main() {
     glVertexAttribDivisor(7, 1);
 
     glBindVertexArray(0);
-
 
     unsigned int instance_object_color_buffer;
     glGenBuffers(1, &instance_object_color_buffer);

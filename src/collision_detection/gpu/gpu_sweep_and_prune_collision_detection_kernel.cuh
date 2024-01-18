@@ -5,7 +5,7 @@
 #include "thrust/execution_policy.h"
 #include <span>
 
-constexpr int ITEMS_PER_THREAD = 1;
+constexpr int ITEMS_PER_THREAD = 4;
 constexpr int MAX_COLLISION_SOLID_COUNT = 10;
 
 template <class ForwardIt, class T, class PredT>

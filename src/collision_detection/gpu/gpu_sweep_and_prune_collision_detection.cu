@@ -1,4 +1,5 @@
 #include "algorithm"
+#include "format"
 #include "collision_detection/gpu/gpu_collision_detection.hpp"
 #include "cub/cub.cuh"
 #include "cuda_runtime.h"
@@ -8,8 +9,8 @@
 #include "thrust/host_vector.h"
 
 struct SolidInfoDecomposerT {
-    __host__ __device__ ::cuda::std::tuple<float &, size_t &> operator()(SolidInfoGPU &key) const {
-        return {key.min_x, key.id};
+    __host__ __device__ ::cuda::std::tuple<float &> operator()(SolidInfoGPU &key) const {
+        return {key.min_x};
     }
 };
 

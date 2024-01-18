@@ -46,9 +46,10 @@ class Ground : public Solid {
 };
 
 class EnvironmentBox : public Solid {
-private:
+  private:
     static constexpr float box_size = 10.0f;
-public:
+
+  public:
     explicit EnvironmentBox(glm::vec3 center);
     Mesh construct_mesh() override;
     AxisAlignedBoundingBox getBoundingBox() override;

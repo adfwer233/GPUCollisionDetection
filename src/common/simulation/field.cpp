@@ -1,5 +1,5 @@
-#include <iostream>
 #include "common/simulation/field.hpp"
+#include <iostream>
 
 glm::vec3 GravityField::eval(glm::vec3 position) const {
     return {0, -1, 0};
