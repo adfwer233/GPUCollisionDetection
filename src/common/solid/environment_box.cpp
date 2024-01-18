@@ -13,10 +13,10 @@ Mesh EnvironmentBox::construct_mesh() {
     auto C = center + glm::vec3{box_size, -box_size, box_size};
     auto D = center + glm::vec3{-box_size, -box_size, box_size};
 
-    mesh.vertices.emplace_back(A, glm::vec3{0, 0, 1}, glm::vec2{0, 0});
-    mesh.vertices.emplace_back(B, glm::vec3{0, 0, 1}, glm::vec2{1, 0});
-    mesh.vertices.emplace_back(C, glm::vec3{0, 0, 1}, glm::vec2{1, 1});
-    mesh.vertices.emplace_back(D, glm::vec3{0, 0, 1}, glm::vec2{0, 1});
+    mesh.vertices.emplace_back(A, glm::vec3{0, 1, 0}, glm::vec2{0, 0});
+    mesh.vertices.emplace_back(B, glm::vec3{0, 1, 0}, glm::vec2{1, 0});
+    mesh.vertices.emplace_back(C, glm::vec3{0, 1, 0}, glm::vec2{1, 1});
+    mesh.vertices.emplace_back(D, glm::vec3{0, 1, 0}, glm::vec2{0, 1});
 
     mesh.face_indices.emplace_back(0, 1, 2);
     mesh.face_indices.emplace_back(0, 2, 3);

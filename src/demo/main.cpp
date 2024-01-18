@@ -23,8 +23,8 @@ const unsigned int SCR_HEIGHT = 1024;
 #define SHADER_DIR "./shader"
 #endif
 
-Camera camera(glm::vec3(0, 0, 10.0f), glm::vec3(0, 1.0f, 0));
-glm::vec3 lightPos(0, 0, 10);
+Camera camera(glm::vec3(15, 0, 15.0f), glm::vec3(0, 1.0f, 0), -135, -10);
+glm::vec3 lightPos(0, 10, 0);
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -140,7 +140,7 @@ int main() {
 
     std::random_device seed;
     std::ranlux48 engine(seed());
-    std::uniform_real_distribution distrib(0.0f, 1.0f);
+    std::uniform_real_distribution distrib(-1.0f, 1.0f);
 
     for (int i = 0; i < x_num; i++) {
         for (int j = 0; j < z_num; j++) {
