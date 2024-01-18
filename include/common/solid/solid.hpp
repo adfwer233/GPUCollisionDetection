@@ -44,3 +44,13 @@ class Ground : public Solid {
     AxisAlignedBoundingBox getBoundingBox() override;
     bool is_collision_with(Solid &solid) override;
 };
+
+class EnvironmentBox : public Solid {
+private:
+    static constexpr float box_size = 10.0f;
+public:
+    explicit EnvironmentBox(glm::vec3 center);
+    Mesh construct_mesh() override;
+    AxisAlignedBoundingBox getBoundingBox() override;
+    bool is_collision_with(Solid &solid) override;
+};

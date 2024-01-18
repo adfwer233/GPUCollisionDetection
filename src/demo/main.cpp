@@ -170,11 +170,16 @@ int main() {
 
     GravityField field;
 
-    Ground ground({0, -5, 0});
-    Mesh ground_mesh = ground.construct_mesh();
-    ground_mesh.bind_buffer();
+    // Ground ground({0, -5, 0});
+    // Mesh ground_mesh = ground.construct_mesh();
+    // ground_mesh.bind_buffer();
 
-    ground_mesh.object_color = {0.5, 0.5, 0};
+    // ground_mesh.object_color = {0.5, 0.5, 0};
+
+    EnvironmentBox env_box({0, -5, 0});
+    Mesh env_box_mesh = env_box.construct_mesh();
+    env_box_mesh.bind_buffer();
+    env_box_mesh.object_color = {0.5, 0.5, 0};
 
     GPUSweepAndPruneCollisionDetection collision_detector(solid_vector.size());
 
@@ -243,16 +248,16 @@ int main() {
 
         // collision_detection between solids
 
-        //         CPUNaiveCollisionDetection::collision_detection(solid_vector);
+        // CPUNaiveCollisionDetection::collision_detection(solid_vector);
 
-        //    CPUSweepAndPruneCollisionDetection::collision_detection(solid_vector,0.005);
+        // CPUSweepAndPruneCollisionDetection::collision_detection(solid_vector,0.005);
 
         collision_detector.collision_detection(solid_vector, 0.005);
 
         // collision detection between solid and ground
 
         for (auto &i : solid_vector) {
-            bool res = simulator.update_state_when_collide(ground, i);
+            bool res = simulator.update_state_when_collide(env_box, i);
         }
 
         processInput(window);
@@ -268,7 +273,7 @@ int main() {
 
         Mesh::process_instanced_rendering(ball_mesh, solid_vector.size(), instanced_shader, camera, lightPos);
 
-        ground_mesh.process_rendering(common_shader, camera, lightPos);
+        env_box_mesh.process_rendering(common_shader, camera, lightPos);
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved
         // etc.)
         // -------------------------------------------------------------------------------
