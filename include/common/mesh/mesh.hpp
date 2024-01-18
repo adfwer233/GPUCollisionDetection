@@ -41,4 +41,6 @@ class Mesh {
                float max_z);
 
   std::optional<AxisAlignedBoundingBox> box;
+
+  static void process_instanced_rendering(Mesh &mesh, size_t amount, Shader &shader, Camera &camera, glm::vec3 lightPos);
 };

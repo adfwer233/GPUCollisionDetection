@@ -20,7 +20,7 @@ void Mesh::bind_buffer() {
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
   glBufferData(GL_ARRAY_BUFFER,
-               vertices.size() * sizeof(decltype(vertices)::value_type),
+               vertices.size() * (sizeof(decltype(vertices)::value_type)),
                vertices.data(), GL_STATIC_DRAW);
 
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
@@ -77,4 +77,28 @@ void Mesh::process_rendering(Shader& shader, Camera camera,
   }
 
   glBindVertexArray(0);
+}
+
+void Mesh::process_instanced_rendering(Mesh &mesh, size_t amount, Shader &shader, Camera &camera,
+                                       glm::vec3 lightPos) {
+    auto projection =
+            glm::perspective(glm::radians(camera.zoom), 1.0f, 0.1f, 100.0f);
+
+    shader.use();
+    shader.set_vec3("objectColor", {1.0, 0, 0});
+    shader.set_vec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+    shader.set_vec3("lightPos", lightPos);
+    shader.set_vec3("viewPos", camera.position);
+
+    int viewTransformLoc = glGetUniformLocation(shader.ID, "view");
+    glUniformMatrix4fv(viewTransformLoc, 1, GL_FALSE,
+                       glm::value_ptr(camera.get_view_transformation()));
+
+    int projectionTransformLoc = glGetUniformLocation(shader.ID, "projection");
+    glUniformMatrix4fv(projectionTransformLoc, 1, GL_FALSE,
+                       glm::value_ptr(projection));
+
+    glBindVertexArray(mesh.VAO);
+    glDrawElementsInstanced(GL_TRIANGLES, mesh.face_indices.size() * 3, GL_UNSIGNED_INT, nullptr, amount);
+    glBindVertexArray(0);
 }

@@ -123,10 +123,14 @@ int main() {
 
   glEnable(GL_DEPTH_TEST);
 
-  Shader shader(std::format("{}/common.vs", SHADER_DIR),
+  Shader common_shader(std::format("{}/common.vs", SHADER_DIR),
                 std::format("{}/common.fs", SHADER_DIR));
 
-  std::vector<std::reference_wrapper<Solid>> solid_vector;
+  Shader instanced_shader(std::format("{}/instanced.vs", SHADER_DIR),
+                          std::format("{}/common.fs", SHADER_DIR));
+
+
+    std::vector<std::reference_wrapper<Solid>> solid_vector;
 
   Ball ball({-1, 0, 0}, 1, {0, 0, 0}, 0.2);
   Ball ball2({-1, 0, 1}, 1, {0, 0, 0}, 0.2);
@@ -155,16 +159,20 @@ int main() {
   std::ranlux48 engine(seed());
   std::uniform_real_distribution distrib(0.0f, 1.0f);
 
-  std::vector<Mesh> mesh_vector;
-  mesh_vector.reserve(solid_vector.size());
+//  std::vector<Mesh> mesh_vector;
+//  mesh_vector.reserve(solid_vector.size());
+
+    Mesh ball_mesh = solid_vector[0].get().construct_mesh();
 
   for (auto solid : solid_vector) {
-    mesh_vector.push_back(solid.get().construct_mesh());
-    Mesh& mesh = mesh_vector.back();
-    mesh.bind_buffer();
-    mesh.object_color = {distrib(engine), distrib(engine), distrib(engine)};
-    solid.get().mesh_ref = mesh_vector[mesh_vector.size() - 1];
+//    mesh_vector.push_back(solid.get().construct_mesh());
+//    Mesh& mesh = mesh_vector.back();
+//    mesh.bind_buffer();
+//    mesh.object_color = {distrib(engine), distrib(engine), distrib(engine)};
+    solid.get().mesh_ref = ball_mesh;
   }
+
+  std::vector<glm::mat4> model_matrices(solid_vector.size());
 
   GravityField field;
 
@@ -174,31 +182,68 @@ int main() {
 
   ground_mesh.object_color = {0.5, 0.5, 0};
 
-  // render loop
+  GPUSweepAndPruneCollisionDetection collision_detector(solid_vector.size());
+
+    for (size_t i = 0; i < solid_vector.size(); i++) {
+        model_matrices[i] = glm::translate(glm::mat4(1.0f), solid_vector[i].get().center);
+    }
+
+    ball_mesh.bind_buffer();
+    ball_mesh.transform = glm::mat4(1.0f);
+
+    unsigned int buffer;
+    glGenBuffers(1, &buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, solid_vector.size() * sizeof(glm::mat4), model_matrices.data(), GL_STATIC_DRAW);
+
+    glBindVertexArray(ball_mesh.VAO);
+
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)0);
+    glEnableVertexAttribArray(4);
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(sizeof(glm::vec4)));
+    glEnableVertexAttribArray(5);
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(2 * sizeof(glm::vec4)));
+    glEnableVertexAttribArray(6);
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(3 * sizeof(glm::vec4)));
+
+    glVertexAttribDivisor(3, 1);
+    glVertexAttribDivisor(4, 1);
+    glVertexAttribDivisor(5, 1);
+    glVertexAttribDivisor(6, 1);
+
+    glBindVertexArray(0);
+
+
+    // render loop
   // -----------
   while (!glfwWindowShouldClose(window)) {
     float currentFrame = static_cast<float>(glfwGetTime());
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
 
-    std::cout << deltaTime << std::endl;
+    std::cout << 1.0f / deltaTime << std::endl;
 
     Simulator simulator(0.005);
 
     for (size_t i = 0; i < solid_vector.size(); i++) {
       auto displacement =
           simulator.update_state_with_field(solid_vector[i], field);
-      Mesh& mesh = mesh_vector[i];
-      mesh.transform = glm::translate(mesh.transform, displacement);
+      model_matrices[i] = glm::translate(model_matrices[i], displacement);
     }
 
-    // collision_detection between solids
+      glBindBuffer(GL_ARRAY_BUFFER, buffer);
+      glBufferData(GL_ARRAY_BUFFER, solid_vector.size() * sizeof(glm::mat4), model_matrices.data(), GL_STATIC_DRAW);
+
+
+
+      // collision_detection between solids
 
     //         CPUNaiveCollisionDetection::collision_detection(solid_vector);
 
 //    CPUSweepAndPruneCollisionDetection::collision_detection(solid_vector,0.005);
 
-    GPUSweepAndPruneCollisionDetection::collision_detection(solid_vector, 0.005);
+    collision_detector.collision_detection(solid_vector, 0.005);
 
     // collision detection between solid and ground
 
@@ -213,11 +258,13 @@ int main() {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    for (auto& mesh : mesh_vector) {
-      mesh.process_rendering(shader, camera, lightPos);
-    }
+//    for (auto& mesh : mesh_vector) {
+//      mesh.process_rendering(shader, camera, lightPos);
+//    }
 
-    ground_mesh.process_rendering(shader, camera, lightPos);
+    Mesh::process_instanced_rendering(ball_mesh, solid_vector.size(), instanced_shader, camera, lightPos);
+
+    ground_mesh.process_rendering(common_shader, camera, lightPos);
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved
     // etc.)
     // -------------------------------------------------------------------------------
