@@ -95,7 +95,7 @@ void GPUSweepAndPruneCollisionDetection::collision_detection(
      */
 
     ball_collision_detection_kernel<<<int(n / (thread_per_block * ITEMS_PER_THREAD)) + 1, thread_per_block>>>(
-        dev_solid_info_sorted, aabb_collision_result, gpu_collision_result, n);
+        dev_solid_info, aabb_collision_result, gpu_collision_result, n);
 
     cudaMemcpy(host_gpu_collision_result, gpu_collision_result, n * MAX_COLLISION_SOLID_COUNT * sizeof(size_t),
                cudaMemcpyDeviceToHost);

@@ -9,8 +9,8 @@ bool Simulator::update_state_when_collide(Solid &solid1, Solid &solid2) const {
         //        std::cout << std::format("{} {} {}\n", solid2.center.x,
         //        solid2.center.y, solid2.center.z) ; std::cout << "collision" <<
         //        std::endl;
-        solid1.velocity *= -1.0f;
-        solid2.velocity *= -1.0f;
+        // solid1.velocity *= 0.5f;
+        // solid2.velocity *= 0.5f;
         return true;
     }
     return false;

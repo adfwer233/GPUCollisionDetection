@@ -135,24 +135,24 @@ int main() {
 
     std::vector<Ball> balls;
 
-    int x_num = 100;
-    int z_num = 100;
+    int x_num = 300;
+    int z_num = 300;
+
+    std::random_device seed;
+    std::ranlux48 engine(seed());
+    std::uniform_real_distribution distrib(0.0f, 1.0f);
 
     for (int i = 0; i < x_num; i++) {
         for (int j = 0; j < z_num; j++) {
             float delta_x = 20.0 / x_num * i;
             float delta_z = 20.0 / z_num * j;
-            balls.emplace_back(glm::vec3{-10 + delta_x, 0, -10 + delta_z}, 1, glm::vec3{0, 0, 0}, 0.02);
-            balls.emplace_back(glm::vec3{-10 + delta_x, 0.5, -10 + delta_z}, 1, glm::vec3{0, 2, 0}, 0.02);
+            balls.emplace_back(glm::vec3{-10 + delta_x, 0, -10 + delta_z}, 1, glm::vec3{distrib(engine), distrib(engine), distrib(engine)}, 0.01);
+            balls.emplace_back(glm::vec3{-10 + delta_x, 0.5, -10 + delta_z}, 1, glm::vec3{distrib(engine), distrib(engine), distrib(engine)}, 0.01);
         }
     }
 
     for (auto &ball : balls)
         solid_vector.push_back(ball);
-
-    std::random_device seed;
-    std::ranlux48 engine(seed());
-    std::uniform_real_distribution distrib(0.0f, 1.0f);
 
     //  std::vector<Mesh> mesh_vector;
     //  mesh_vector.reserve(solid_vector.size());
@@ -164,6 +164,10 @@ int main() {
 
     for (int i = 0; auto solid : solid_vector) {
         object_color[i] = {distrib(engine), distrib(engine), distrib(engine)};
+        // if (i == 0)
+        //     object_color[i] = {distrib(engine), distrib(engine), distrib(engine)};
+        // else
+        //     object_color[i] = {1.0, 0, 0};
         solid.get().mesh_ref = ball_mesh;
         i++;
     }
@@ -176,7 +180,7 @@ int main() {
 
     // ground_mesh.object_color = {0.5, 0.5, 0};
 
-    EnvironmentBox env_box({0, -5, 0});
+    EnvironmentBox env_box({0, 0, 0});
     Mesh env_box_mesh = env_box.construct_mesh();
     env_box_mesh.bind_buffer();
     env_box_mesh.object_color = {0.5, 0.5, 0};
@@ -240,7 +244,7 @@ int main() {
 
         for (size_t i = 0; i < solid_vector.size(); i++) {
             auto displacement = simulator.update_state_with_field(solid_vector[i], field);
-            model_matrices[i] = glm::translate(model_matrices[i], displacement);
+            model_matrices[i] = glm::translate(glm::mat4(1.0f), solid_vector[i].get().center);
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, instance_transform_buffer);

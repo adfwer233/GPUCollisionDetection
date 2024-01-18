@@ -1,3 +1,4 @@
+#include <format>
 #include "common/solid/solid.hpp"
 
 EnvironmentBox::EnvironmentBox(glm::vec3 center) {
@@ -34,37 +35,44 @@ bool EnvironmentBox::is_collision_with(Solid &solid) {
         // x-axis, lower side
         if (ball.center.x - ball.radius < this->center.x - this->box_size) {
             res = true;
-            ball.center.x = this->center.x - this->box_size + ball.radius + 1e-8;
+            solid.center.x = this->center.x - this->box_size + ball.radius + 1e-8;
+            solid.velocity.x *= -1.0f;
         }
 
         // x-axis, upper side
         if (ball.center.x + ball.radius > this->center.x + this->box_size) {
             res = true;
-            ball.center.x = this->center.x + this->box_size - ball.radius - 1e-8;
+            solid.center.x = this->center.x + this->box_size - ball.radius - 1e-8;
+            solid.velocity.x *= -1.0f;
         }
 
         // y-axis, lower side
-        if (ball.center.y - ball.radius < this->center.y - this->box_size) {
+        if (ball.center.y - ball.radius < this->center.y - this->box_size + 1e-6) {
             res = true;
-            ball.center.y = this->center.y - this->box_size + ball.radius + 1e-8;
+            solid.center.y = this->center.y - this->box_size + ball.radius + 1e-6;
+            solid.velocity.y *= -0.5f;
+            // std::cout << std::format("bottom {} {} {} {}", solid.velocity.x, solid.velocity.y, solid.velocity.z, ball.center.y) << std::endl;
         }
 
         // y-axis, upper side
         if (ball.center.y + ball.radius > this->center.y + this->box_size) {
             res = true;
-            ball.center.y = this->center.y + this->box_size - ball.radius - 1e-8;
+            solid.center.y = this->center.y + this->box_size - ball.radius - 1e-8;
+            solid.velocity.y *= -1.0f;
         }
 
         // z-axis, lower side
         if (ball.center.z - ball.radius < this->center.z - this->box_size) {
             res = true;
             ball.center.z = this->center.z - this->box_size + ball.radius + 1e-8;
+            solid.velocity.z *= -1.0f;
         }
 
         // z-axis, upper side
         if (ball.center.z + ball.radius > this->center.z + this->box_size) {
             res = true;
             ball.center.z = this->center.z + this->box_size - ball.radius - 1e-8;
+            solid.velocity.z *= -1.0f;
         }
 
         return res;
