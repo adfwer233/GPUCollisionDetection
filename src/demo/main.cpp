@@ -124,7 +124,7 @@ int main() {
 
     Shader common_shader(std::format("{}/common.vs", SHADER_DIR), std::format("{}/common.fs", SHADER_DIR));
 
-    Shader instanced_shader(std::format("{}/instanced.vs", SHADER_DIR), std::format("{}/common.fs", SHADER_DIR));
+    Shader instanced_shader(std::format("{}/instanced.vs", SHADER_DIR), std::format("{}/instanced.fs", SHADER_DIR));
 
     std::vector<std::reference_wrapper<Solid>> solid_vector;
 
@@ -159,16 +159,14 @@ int main() {
 
     Mesh ball_mesh = solid_vector[0].get().construct_mesh();
 
-    for (auto solid : solid_vector) {
-        //    mesh_vector.push_back(solid.get().construct_mesh());
-        //    Mesh& mesh = mesh_vector.back();
-        //    mesh.bind_buffer();
-        //    mesh.object_color = {distrib(engine), distrib(engine),
-        //    distrib(engine)};
-        solid.get().mesh_ref = ball_mesh;
-    }
-
     std::vector<glm::mat4> model_matrices(solid_vector.size());
+    std::vector<glm::vec3> object_color(solid_vector.size());
+
+    for (int i = 0; auto solid : solid_vector) {
+        object_color[i] = {distrib(engine), distrib(engine), distrib(engine)};
+        solid.get().mesh_ref = ball_mesh;
+        i++;
+    }
 
     GravityField field;
 
@@ -187,27 +185,41 @@ int main() {
     ball_mesh.bind_buffer();
     ball_mesh.transform = glm::mat4(1.0f);
 
-    unsigned int buffer;
-    glGenBuffers(1, &buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    unsigned int instance_transform_buffer;
+    glGenBuffers(1, &instance_transform_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, instance_transform_buffer);
     glBufferData(GL_ARRAY_BUFFER, solid_vector.size() * sizeof(glm::mat4), model_matrices.data(), GL_STATIC_DRAW);
 
     glBindVertexArray(ball_mesh.VAO);
 
-    glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)0);
     glEnableVertexAttribArray(4);
-    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(sizeof(glm::vec4)));
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)0);
     glEnableVertexAttribArray(5);
-    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(2 * sizeof(glm::vec4)));
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(sizeof(glm::vec4)));
     glEnableVertexAttribArray(6);
-    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(3 * sizeof(glm::vec4)));
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(2 * sizeof(glm::vec4)));
+    glEnableVertexAttribArray(7);
+    glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(3 * sizeof(glm::vec4)));
 
-    glVertexAttribDivisor(3, 1);
     glVertexAttribDivisor(4, 1);
     glVertexAttribDivisor(5, 1);
     glVertexAttribDivisor(6, 1);
+    glVertexAttribDivisor(7, 1);
 
+    glBindVertexArray(0);
+
+
+    unsigned int instance_object_color_buffer;
+    glGenBuffers(1, &instance_object_color_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, instance_object_color_buffer);
+    glBufferData(GL_ARRAY_BUFFER, solid_vector.size() * sizeof(glm::vec3), object_color.data(), GL_STATIC_DRAW);
+
+    glBindVertexArray(ball_mesh.VAO);
+
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void *)0);
+
+    glVertexAttribDivisor(3, 1);
     glBindVertexArray(0);
 
     // render loop
@@ -226,7 +238,7 @@ int main() {
             model_matrices[i] = glm::translate(model_matrices[i], displacement);
         }
 
-        glBindBuffer(GL_ARRAY_BUFFER, buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, instance_transform_buffer);
         glBufferData(GL_ARRAY_BUFFER, solid_vector.size() * sizeof(glm::mat4), model_matrices.data(), GL_STATIC_DRAW);
 
         // collision_detection between solids
