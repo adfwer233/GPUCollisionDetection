@@ -6,6 +6,8 @@ set(SRC_FILE main.cpp)
 
 add_definitions(-DSHADER_DIR="./shader")
 
+add_definitions(-DOPENCV_EXPORT)
+
 add_executable(${PROJECT_NAME} ${SRC_FILE})
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)

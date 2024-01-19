@@ -7,7 +7,7 @@ enable_testing()
 add_executable(test collision_detection/sort_test.cu
         collision_detection/scan_test.cu)
 
-target_link_libraries(test CCCL::CCCL GTest::gtest_main)
+target_link_libraries(test GTest::gtest_main)
 
 include(GoogleTest)
 

@@ -14,16 +14,27 @@ include(fetch-glfw)
 include(fetch-glad)
 include(fetch-glm)
 include(fetch-gtest)
+#include(fetch-opencv)
 
-include(CPM)
-include(fetch-cccl)
+#include(CPM)
+#include(fetch-cccl)
 
 add_subdirectory(src/demo)
 add_subdirectory(src/collision_detection)
 add_subdirectory(src/common)
 add_subdirectory(test)
 
-target_link_libraries(demo glfw glad glm gtest)
+find_package( OpenCV )
+INCLUDE_DIRECTORIES( ${OpenCV_INCLUDE_DIRS} )
+
+
+if(OpenCV_FOUND)
+    message(STATUS "found opencv")
+    target_link_libraries(demo glfw glad glm gtest ${OpenCV_LIBS})
+else()
+    target_link_libraries(demo glfw glad glm gtest)
+endif()
+
 
 target_link_libraries(test collision_detection)
 
