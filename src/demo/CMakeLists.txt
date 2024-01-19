@@ -6,7 +6,10 @@ set(SRC_FILE main.cpp)
 
 add_definitions(-DSHADER_DIR="./shader")
 
-add_definitions(-DOPENCV_EXPORT)
+if (OpenCV_FOUND AND ${EXPORT_VIDEO})
+    message(STATUS "Enable exporting video")
+    add_definitions(-DOPENCV_EXPORT)
+endif ()
 
 add_executable(${PROJECT_NAME} ${SRC_FILE})
 

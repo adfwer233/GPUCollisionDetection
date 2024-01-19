@@ -19,14 +19,15 @@ include(fetch-gtest)
 #include(CPM)
 #include(fetch-cccl)
 
-add_subdirectory(src/demo)
-add_subdirectory(src/collision_detection)
-add_subdirectory(src/common)
-add_subdirectory(test)
+set(EXPORT_VIDEO "OFF" CACHE BOOL "Whether export video")
 
 find_package( OpenCV )
 INCLUDE_DIRECTORIES( ${OpenCV_INCLUDE_DIRS} )
 
+add_subdirectory(src/demo)
+add_subdirectory(src/collision_detection)
+add_subdirectory(src/common)
+add_subdirectory(test)
 
 if(OpenCV_FOUND)
     message(STATUS "found opencv")

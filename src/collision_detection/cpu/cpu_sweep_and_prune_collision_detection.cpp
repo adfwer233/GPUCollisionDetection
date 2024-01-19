@@ -47,13 +47,13 @@ void CPUSweepAndPruneCollisionDetection::collision_detection(
         auto box_i = solid_infos[i].box;
         for (size_t j = i + 1; j < possible_collision_upper_bound[i]; j++) {
             auto box_j = solid_infos[j].box;
-            bool overlap_flag = false;
-            if (std::max(box_i.min_x, box_j.min_x) <= std::min(box_i.max_x, box_j.max_x))
-                overlap_flag = true;
-            if (std::max(box_i.min_y, box_j.min_y) <= std::min(box_i.max_y, box_j.max_y))
-                overlap_flag = true;
-            if (std::max(box_i.min_z, box_j.min_z) <= std::min(box_i.max_z, box_j.max_z))
-                overlap_flag = true;
+            bool overlap_flag = true;
+            if (std::max(box_i.min_x, box_j.min_x) > std::min(box_i.max_x, box_j.max_x))
+                overlap_flag = false;
+            if (std::max(box_i.min_y, box_j.min_y) > std::min(box_i.max_y, box_j.max_y))
+                overlap_flag = false;
+            if (std::max(box_i.min_z, box_j.min_z) > std::min(box_i.max_z, box_j.max_z))
+                overlap_flag = false;
 
             if (overlap_flag)
                 aabb_collision_result[solid_infos[i].id].push_back(solid_infos[j].id);
