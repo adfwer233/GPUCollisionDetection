@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.26)
 
 if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
-    set(CMAKE_CUDA_ARCHITECTURES 75)
+    set(CMAKE_CUDA_ARCHITECTURES 50)
 endif()
 
 project(GPUCollisionDetection)

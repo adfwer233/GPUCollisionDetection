@@ -3,6 +3,7 @@
 #include "collision_detection/gpu/gpu_collision_detection.hpp"
 #include "cub/cub.cuh"
 #include "cuda_runtime.h"
+#include "cuda/std/tuple"
 #include "gpu_sweep_and_prune_collision_detection_kernel.cuh"
 
 #include "thrust/device_vector.h"
