@@ -17,6 +17,8 @@
 #include "opencv2/videoio.hpp"
 #endif
 
+#include "argparse/argparse.hpp"
+
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
 
@@ -92,7 +94,28 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
     camera.process_mouse_movement(x_offset, y_offset);
 }
 
-int main() {
+int main(int argc, char *argv[]) {
+
+    argparse::ArgumentParser program("demo");
+
+    program.add_argument("--xnum").help("number of balls along x-axis").scan<'i', int>().default_value(300);
+
+    program.add_argument("--znum").help("number of balls along z-axis").scan<'i', int>().default_value(300);
+
+    program.add_argument("--radius").help("radius of balls").scan<'f', float>().default_value(0.01f);
+
+#ifdef OPENCV_EXPORT
+    program.add_argument("--export_path").help("export file path").default_value(std::string(".\\export.avi"));
+#endif
+
+    try {
+        program.parse_args(argc, argv);
+    } catch (const std::exception &err) {
+        std::cerr << err.what() << std::endl;
+        std::cerr << program;
+        return 1;
+    }
+
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();
@@ -133,28 +156,25 @@ int main() {
 
     std::vector<std::reference_wrapper<Solid>> solid_vector;
 
-    Ball ball({-1, 0, 0}, 1, {0, 0, 0}, 0.2);
-    Ball ball2({-1, 0, 1}, 1, {0, 0, 0}, 0.2);
-    Ball ball3({-1, 0.5, 0}, 1, {0, 1, 0}, 0.2);
-    Ball ball4({-1, 0.5, 1}, 1, {0, 1, 0}, 0.2);
-
     std::vector<Ball> balls;
 
-    int x_num = 300;
-    int z_num = 300;
+    int x_num = program.get<int>("--xnum");
+    int z_num = program.get<int>("--znum");
 
     std::random_device seed;
     std::ranlux48 engine(seed());
     std::uniform_real_distribution distrib(-1.0f, 1.0f);
+
+    auto ball_radius = program.get<float>("--radius");
 
     for (int i = 0; i < x_num; i++) {
         for (int j = 0; j < z_num; j++) {
             float delta_x = 20.0 / x_num * i;
             float delta_z = 20.0 / z_num * j;
             balls.emplace_back(glm::vec3{-10 + delta_x, 0, -10 + delta_z}, 1,
-                               glm::vec3{distrib(engine), distrib(engine), distrib(engine)}, 0.01);
+                               glm::vec3{distrib(engine), distrib(engine), distrib(engine)}, ball_radius);
             balls.emplace_back(glm::vec3{-10 + delta_x, 0.5, -10 + delta_z}, 1,
-                               glm::vec3{distrib(engine), distrib(engine), distrib(engine)}, 0.01);
+                               glm::vec3{distrib(engine), distrib(engine), distrib(engine)}, ball_radius);
         }
     }
 
@@ -242,8 +262,9 @@ int main() {
 #ifdef OPENCV_EXPORT
     export_flag = true;
     cv::VideoWriter video_writer;
-    video_writer.open(".\\export.avi", cv::VideoWriter::fourcc('X', 'V', 'I', 'D'), 60.0f,
-                      cv::Size(SCR_WIDTH, SCR_HEIGHT), true);
+    auto export_path = program.get<std::string>("--export_path");
+    video_writer.open(export_path, cv::VideoWriter::fourcc('X', 'V', 'I', 'D'), 200.0f, cv::Size(SCR_WIDTH, SCR_HEIGHT),
+                      true);
 #endif
 
     // render loop

@@ -14,6 +14,7 @@ include(fetch-glfw)
 include(fetch-glad)
 include(fetch-glm)
 include(fetch-gtest)
+include(fetch-argparse)
 #include(fetch-opencv)
 
 #include(CPM)
@@ -29,11 +30,13 @@ add_subdirectory(src/collision_detection)
 add_subdirectory(src/common)
 add_subdirectory(test)
 
+message(STATUS ${CMAKE_CURRENT_LIST_DIR})
+
 if(OpenCV_FOUND)
     message(STATUS "found opencv")
-    target_link_libraries(demo glfw glad glm gtest ${OpenCV_LIBS})
+    target_link_libraries(demo glfw glad glm gtest ${OpenCV_LIBS} argparse)
 else()
-    target_link_libraries(demo glfw glad glm gtest)
+    target_link_libraries(demo glfw glad glm gtest argparse)
 endif()
 
 
