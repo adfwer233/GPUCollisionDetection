@@ -6,13 +6,23 @@
 #include "iostream"
 #include "string"
 
+/**
+ * @brief Class encapsulating OpenGL Shader
+ */
 class Shader {
   public:
     unsigned int ID;
 
-    // construct shader from .vs and .fs files
+    /**
+     * @brief construct shader from .vs and .fs files
+     * @param vertexPath
+     * @param fragmentPath
+     */
     Shader(const std::string &vertexPath, const std::string &fragmentPath);
 
+    /**
+     * @brief use this shader instance
+     */
     void use() const;
 
     void set_float(const std::string &name, float value) const;

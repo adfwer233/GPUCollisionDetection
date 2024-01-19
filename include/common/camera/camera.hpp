@@ -22,34 +22,65 @@ enum CameraMovement {
  */
 class Camera {
   private:
-    // calculates the front vector from the Camera's (updated) Euler Angles
+    /**
+     * @brief calculates the front vector from the Camera's (updated) Euler Angles
+     */
     void update_camera_vectors();
 
   public:
-    // position of camera in world coordinate
+    /**
+     * @brief position of camera in world coordinate
+     */
     glm::vec3 position;
 
-    // position of scene origin in world space
+    /**
+     * @brief position of scene origin in world space
+     */
     glm::vec3 camera_target;
 
-    // up direction of camera (normalized)
+    /**
+     * @brief up direction of camera (normalized)
+     */
     glm::vec3 camera_up_axis;
 
-    // right axis direction of camera (normalized)
+    /**
+     * @brief right axis direction of camera (normalized)
+     */
     glm::vec3 camera_right_axis;
 
-    // camera front
+    /**
+     * @brief front vector of camera
+     */
     glm::vec3 camera_front;
 
+    /**
+     * @brief world up
+     */
     glm::vec3 world_up;
 
-    // euler angle
+    /**
+     * @brief euler angle: yaw
+     */
     float yaw;
+
+    /**
+     * @brief euler angle: pitch
+     */
     float pitch;
 
-    // camera options
+    /**
+     * @brief camera zoom
+     */
     float zoom;
+
+    /**
+     * @brief move speed for interaction
+     */
     const float move_speed;
+
+    /**
+     * @brief mouse sensitivity
+     */
     const float mouse_sensitivity;
 
     Camera(glm::vec3 pos, glm::vec3 up, float t_yaw = default_yaw, float t_pitch = default_pitch)
@@ -64,9 +95,23 @@ class Camera {
 
     glm::mat4 get_view_transformation() const;
 
+    /**
+     * @brief update camera state with an offset given by mouse scroll
+     * @param offset
+     */
     void process_mouse_scroll(float offset);
 
+    /**
+     * @brief update camera state with offsets given by mouse movement
+     * @param x_offset
+     * @param y_offset
+     */
     void process_mouse_movement(float x_offset, float y_offset);
 
+    /**
+     * @brief process keyboard with given direction and delta time
+     * @param direction
+     * @param deltaTime
+     */
     void process_keyboard(CameraMovement direction, float deltaTime);
 };

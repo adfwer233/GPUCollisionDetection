@@ -242,7 +242,8 @@ int main() {
 #ifdef OPENCV_EXPORT
     export_flag = true;
     cv::VideoWriter video_writer;
-    video_writer.open(".\\export.avi", cv::VideoWriter::fourcc( 'X', 'V', 'I', 'D'  ), 60.0f, cv::Size(SCR_WIDTH, SCR_HEIGHT), true);
+    video_writer.open(".\\export.avi", cv::VideoWriter::fourcc('X', 'V', 'I', 'D'), 60.0f,
+                      cv::Size(SCR_WIDTH, SCR_HEIGHT), true);
 #endif
 
     // render loop
@@ -252,7 +253,9 @@ int main() {
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        glfwSetWindowTitle(window, std::format("Collision Detection Demo  FPS: {:.3f}, Export: {} ", 1.0f / deltaTime, export_flag).c_str());
+        glfwSetWindowTitle(
+            window,
+            std::format("Collision Detection Demo  FPS: {:.3f}, Export: {} ", 1.0f / deltaTime, export_flag).c_str());
 
         Simulator simulator(0.005);
 
@@ -294,14 +297,14 @@ int main() {
         env_box_mesh.process_rendering(common_shader, camera, lightPos);
 
 #ifdef OPENCV_EXPORT
-        cv::Mat pixels( SCR_HEIGHT, SCR_WIDTH, CV_8UC3 );
-        glReadPixels(0, 0, SCR_WIDTH, SCR_HEIGHT, GL_RGB, GL_UNSIGNED_BYTE, pixels.data );
-        cv::Mat cv_pixels( SCR_HEIGHT, SCR_WIDTH, CV_8UC3 );
-        for( int y=0; y<SCR_HEIGHT; y++ ) for( int x=0; x<SCR_HEIGHT; x++ )
-            {
-                cv_pixels.at<cv::Vec3b>(y,x)[2] = pixels.at<cv::Vec3b>(SCR_HEIGHT-y-1,x)[0];
-                cv_pixels.at<cv::Vec3b>(y,x)[1] = pixels.at<cv::Vec3b>(SCR_HEIGHT-y-1,x)[1];
-                cv_pixels.at<cv::Vec3b>(y,x)[0] = pixels.at<cv::Vec3b>(SCR_HEIGHT-y-1,x)[2];
+        cv::Mat pixels(SCR_HEIGHT, SCR_WIDTH, CV_8UC3);
+        glReadPixels(0, 0, SCR_WIDTH, SCR_HEIGHT, GL_RGB, GL_UNSIGNED_BYTE, pixels.data);
+        cv::Mat cv_pixels(SCR_HEIGHT, SCR_WIDTH, CV_8UC3);
+        for (int y = 0; y < SCR_HEIGHT; y++)
+            for (int x = 0; x < SCR_HEIGHT; x++) {
+                cv_pixels.at<cv::Vec3b>(y, x)[2] = pixels.at<cv::Vec3b>(SCR_HEIGHT - y - 1, x)[0];
+                cv_pixels.at<cv::Vec3b>(y, x)[1] = pixels.at<cv::Vec3b>(SCR_HEIGHT - y - 1, x)[1];
+                cv_pixels.at<cv::Vec3b>(y, x)[0] = pixels.at<cv::Vec3b>(SCR_HEIGHT - y - 1, x)[2];
             }
         video_writer << cv_pixels;
 #endif

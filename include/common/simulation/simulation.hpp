@@ -5,6 +5,9 @@
 
 class Solid;
 
+/**
+ * @brief class performing vector simulation
+ */
 class Simulator {
   private:
     float time_per_frame;
